@@ -3,35 +3,36 @@ using namespace std;
 #define endl "\n"
 #define int long long
 int mod=1e9+7;
-
 int n,m;
 vector<vector<int>> v(100001);
-std::vector<int> tmp;
-bool vis[100001]={false};
+std::vector<int> p(100001);
+std::vector<bool> vis(100001);
+vector<int> ans;
 
-bool dfs(int root,int parent)
+void dfs(int root,int parent=-1)
 {
+    p[root]=parent;
+   // cout<<"parent of "<<root<<"  "<<parent<<endl; 
     vis[root]=1;
-    tmp.push_back(root);
     for (auto it:v[root])
     {
-        if (vis[it]==false)
-        {
-            if (dfs(it,root)==true)
+        if (!vis[it])
+            dfs(it,root);
+        else if (it!=parent){
+            ans.push_back(it);
+            int tmp=root;
+            while (it^root)
             {
-                return true;
+                ans.push_back(root);
+                root=p[root];
             }
+            ans.push_back(root);
+            cout<<ans.size()<<endl;
+            for (auto it:ans)
+                cout<<it<<" ";
+            exit(0);
         }
-        else if (it!=parent)
-        {
-            tmp.push_back(it);
-            return true;
-        }        
     }
-    tmp.clear();
-    return false;
-    
-
 }
 
 signed main()
@@ -54,26 +55,19 @@ signed main()
         v[y].push_back(x);
 
     }
-    bool ans=dfs(x,-1);
-    std::vector<int> ttt;
-    if (ans)
+    // for (int i=1;i<=n;++i)
+    // {
+    //     cout<<i<<" ";
+    //     for (auto it:v[i])
+    //         cout<<it<<" ";
+    //     cout<<endl;
+    // }
+    for (int i=1;i<=n;++i)
     {
-        int a=tmp[tmp.size()-1];
-        ttt.push_back(a);
-        for (int i=tmp.size()-2;i>=0;--i)
-            {
-                ttt.push_back(tmp[i]);
-                if (tmp[i]==a)
-                    break;
-            }
-        cout<<ttt.size()<<endl;
-        for (int i=ttt.size()-1;i>=0;--i)
-            cout<<ttt[i]<<" ";
-        cout<<endl;
+        if (!vis[i])
+            dfs(i);
     }
-    else
-        cout<<"IMPOSSIBLE"<<endl;
-
-      
+    // dfs(3);
+    cout<<"IMPOSSIBLE";
     return 0;
 }

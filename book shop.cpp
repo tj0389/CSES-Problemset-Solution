@@ -4,7 +4,7 @@ using namespace std;
 #define int long long
 const int mod=1e9+7,mm=1e6;
 
-int dp[mm+1];
+int c[mm+1],p[mm+1],dp[mm+1];
 
 signed main()
 {
@@ -17,19 +17,18 @@ signed main()
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    int n,m;
-    cin>>n>>m;
-    std::vector<int> v(n);
+    int n,x;
+    cin>>n>>x;
     for (int i=0;i<n;++i)
-        cin>>v[i];
-    dp[0]=1;
-    for (int j=0;j<n;++j)
+        cin>>c[i];
+    for (int i=0;i<n;++i)
+        cin>>p[i];
+    
+    for (int i=0;i<n;++i)
     {
-        for (int i=1;i<=m;++i){
-            if (i>=v[j]){
-                dp[i]=(dp[i]+dp[i-v[j]])%mod;
-            }
+        for (int j=x;j>=c[i];--j){
+            dp[j]=max(dp[j],dp[j-c[i]]+p[i]);
         }
     }
-    cout<<dp[m];
+    cout<<dp[x];
 }
